@@ -1,3 +1,3 @@
 export class ApiEndpoints {
-  static STOCK_WEBSOCKET_URL = 'wss://stocks.mnet.website';
+  static STOCK_WEBSOCKET_URL = 'ws://stocks.mnet.website';
 }
