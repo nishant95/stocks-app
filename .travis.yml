@@ -15,6 +15,7 @@ before_script:
 
 script:
   - npm run build-prod
+  - cd dist
 
 deploy:
   provider: pages
