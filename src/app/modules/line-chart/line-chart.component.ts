@@ -22,9 +22,13 @@ export class LineChartComponent implements OnInit {
   }
 
   ngOnInit() {
+    const dateFormat = d3.time.format.multi([
+        ['%H:%M:%S', function(d) { return d.getHours(); } ], // %L for millis
+        ['%a %d', function(d) { return true; }]
+    ]);
     this.options = {
       chart: {
-        type: 'lineChart',
+        type: 'lineWithFocusChart',
         height: 450,
         margin: {
           top: 20,
@@ -53,12 +57,22 @@ export class LineChartComponent implements OnInit {
             console.log('tooltipHide');
           }
         },
+        xScale: d3.time.scale(),
         xAxis: {
-          axisLabel: 'Time',
+        //   axisLabel: 'Time',
           tickFormat: function (d) {
-            return d3.time.format('%c')(new Date());
+            return dateFormat(new Date(d));
           },
+          rotateLabels: -45,
         },
+        x2Axis: {
+            axisLabel: 'Time',
+            tickFormat: function (d) {
+              return dateFormat(new Date(d));
+            },
+            rotateLabels: -45,
+        },
+        forceY: [0, 400],
         yAxis: {
           axisLabel: 'Price',
           tickFormat: function (d) {
