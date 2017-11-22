@@ -1,0 +1,15 @@
+.increasing{
+  background-color: limegreen;
+}
+
+.decreasing{
+  background-color: red;
+}
+
+.decimal{
+  text-align: right;
+}
+
+.stock-row{
+  cursor: pointer;
+}
