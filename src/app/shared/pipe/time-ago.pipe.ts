@@ -1,18 +1,22 @@
-import { ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs';
+import {ChangeDetectorRef, OnDestroy, Pipe, PipeTransform} from '@angular/core';
 import {AsyncPipe, DatePipe } from '@angular/common';
-
+import {Observable} from 'rxjs/Observable';
+import {TimerObservable} from 'rxjs/observable/TimerObservable';
+import 'rxjs/add/operator/takeWhile';
+import 'rxjs/add/operator/map';
 
 @Pipe({
   name: 'timeAgo',
   pure: false
 })
-export class TimeAgoPipe extends AsyncPipe implements PipeTransform{
+export class TimeAgoPipe extends AsyncPipe implements PipeTransform, OnDestroy {
   value: Date;
   timer: Observable<string>;
+  private alive: boolean;
 
   constructor(ref: ChangeDetectorRef) {
     super(ref);
+    this.alive = true;
   }
 
   transform(obj: any, args?: any[]): any {
@@ -30,7 +34,7 @@ export class TimeAgoPipe extends AsyncPipe implements PipeTransform{
   }
 
   private getObservable() {
-    return Observable.interval(1000).startWith(0).map(() => {
+    return TimerObservable.create(0, 1000).takeWhile(() => this.alive).map(() => {
       let result: string;
       // current time
       const now = new Date().getTime();
@@ -52,5 +56,9 @@ export class TimeAgoPipe extends AsyncPipe implements PipeTransform{
       }
       return result;
     });
+  }
+
+  ngOnDestroy() {
+    this.alive = false;
   }
 }
