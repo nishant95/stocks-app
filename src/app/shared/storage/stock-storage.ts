@@ -1,6 +1,6 @@
 class StockValues {
   stockId: string;
-  prices: [{date: number; price: number; }];
+  prices: [{date: Date; price: number; }];
 }
 
 export class StockStorage {
@@ -22,13 +22,13 @@ export class StockStorage {
 }
 
 function getArrayWithLimitedLength(length) {
-  const array = new Array();
+  const array = [];
 
   array.push = function () {
     if (this.length >= length) {
       this.shift();
     }
     return Array.prototype.push.apply(this, arguments);
-  }
+  };
   return array;
 }

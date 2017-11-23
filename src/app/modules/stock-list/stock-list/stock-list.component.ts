@@ -11,7 +11,7 @@ import {StockStorage} from '../../../shared/storage/stock-storage';
 export class StockListComponent {
   stocks: StockData[] = [];
   selectedStockIds: string[] = [];
-  libValue = 1;
+  libValue = 2;
   get selectedStock(): StockData{
     return this.stocks.find(s => s.stockId === this.selectedStockIds[0]);
   }

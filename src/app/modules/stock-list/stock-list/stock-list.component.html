@@ -38,24 +38,27 @@
     </table>
   </div>
   <div class="col-6">
-    <!--<div class="offset-3">-->
-      <!--<label>Select Lib:-->
-        <!--<select value="1" name="chartLib" (change)="changeLib($event.target.value)">-->
-          <!--<option value="1">nvd3</option>-->
-          <!--<option value="2">highcharts</option>-->
-        <!--</select>-->
-      <!--</label>-->
-    <!--</div>-->
     <div *ngIf="selectedStockIds.length>0" class="chart-panel">
-        <!--<div class="offset-2">-->
-          <h2 style="text-align: center;">{{selectedStockIds[0] | uppercase}}</h2>
-        <!--</div>-->
-        <!--<div class="offset-1">-->
-          <!--<span><b>Current Price:</b> {{selectedStock.price | number: '1.2-2'}}</span>-->
-        <!--</div>-->
-        <div *ngIf="libValue==1" class="chart-div">
-            <app-line-chart [selectedStocks]="selectedStockIds" [stockPriceChanges]="priceChangesInSelectedStocks"></app-line-chart>
+      <div class="row">
+        <h2 style="text-align: center;" class="col-8">{{selectedStockIds[0] | uppercase}}</h2>
+        <div class="col-3">
+          <label>
+            <select value="2" name="chartLib" (change)="changeLib($event.target.value)" class="form-control">
+              <option value="2">highcharts</option>
+              <option value="1">nvd3</option>
+            </select>
+          </label>
         </div>
+      </div>
+
+      <div *ngIf="libValue==1" class="chart-div">
+          <app-line-chart [selectedStocks]="selectedStockIds" [stockPriceChanges]="priceChangesInSelectedStocks">
+          </app-line-chart>
+      </div>
+      <div *ngIf="libValue==2">
+        <app-highstock-chart [selectedStocks]="selectedStockIds" [stockPriceChanges]="priceChangesInSelectedStocks">
+        </app-highstock-chart>
+      </div>
     </div>
   </div>
 </div>
