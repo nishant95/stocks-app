@@ -3,6 +3,7 @@ import {StockData} from '../../../shared/model/stock-data.model';
 import {StocksService} from '../../../shared/service/stocks.service';
 import {StockStorage} from '../../../shared/storage/stock-storage';
 
+
 @Component({
   selector: 'app-stock-list',
   templateUrl: './stock-list.component.html',

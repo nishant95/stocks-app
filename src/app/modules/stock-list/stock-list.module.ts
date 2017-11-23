@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { StockListComponent } from './stock-list/stock-list.component';
 import { StocksService } from '../../shared/service/stocks.service';
 import {LineChartComponent} from '../line-chart/line-chart.component';
 import {HighstockChartModule} from '../highstock-chart/highstock-chart.module';
+import {TimeAgoPipe} from '../../shared/pipe/time-ago.pipe';
 
 import { NvD3Module } from 'ng2-nvd3';
 import 'd3';
@@ -16,7 +18,7 @@ import 'nvd3';
     NvD3Module,
     HighstockChartModule
   ],
-  declarations: [StockListComponent, LineChartComponent],
+  declarations: [TimeAgoPipe, LineChartComponent, StockListComponent],
   providers: [StocksService],
   exports: [StockListComponent]
 })

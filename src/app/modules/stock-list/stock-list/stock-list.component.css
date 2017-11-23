@@ -29,3 +29,8 @@ th{
 .chart-div{
   margin-top: 20px;
 }
+
+.row{
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
