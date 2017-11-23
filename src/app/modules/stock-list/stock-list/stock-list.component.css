@@ -10,6 +10,22 @@
   text-align: right;
 }
 
+th{
+  text-align: center;
+}
+
 .stock-row{
   cursor: pointer;
+}
+
+.stock-row.active{
+  background-color: darkgrey;
+}
+
+.chart-panel{
+  margin-top: 20px;
+}
+
+.chart-div{
+  margin-top: 20px;
 }

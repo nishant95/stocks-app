@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {StockData} from '../../../shared/model/stock-data.model';
 import {StocksService} from '../../../shared/service/stocks.service';
+import {StockStorage} from '../../../shared/storage/stock-storage';
 
 @Component({
   selector: 'app-stock-list',
@@ -9,7 +10,11 @@ import {StocksService} from '../../../shared/service/stocks.service';
 })
 export class StockListComponent {
   stocks: StockData[] = [];
-  selectedStocks: string[] = [];
+  selectedStockIds: string[] = [];
+  libValue = 1;
+  get selectedStock(): StockData{
+    return this.stocks.find(s => s.stockId === this.selectedStockIds[0]);
+  }
 
   priceChangesInSelectedStocks: StockData[] = [];
 
@@ -55,14 +60,25 @@ export class StockListComponent {
         };
         this.stocks.push(changedStock);
       }
-      if (this.selectedStocks.findIndex(id => id === changedStock.stockId) > -1) {
+      if (this.selectedStockIds.findIndex(id => id === changedStock.stockId) > -1) {
         priceChangesInSelectedStocks.push(changedStock);
       }
+      if (this.selectedStockIds.length === 0) { this.selectedStockIds = [changedStock.stockId]; }
+      StockStorage.push({stockId: changedStock.stockId, updateTime: changedStock.updateTime, price: changedStock.price});
     });
     this.priceChangesInSelectedStocks = priceChangesInSelectedStocks;
   }
 
   selectStock(stockId: string) {
-    this.selectedStocks = [stockId];
+    this.selectedStockIds = [stockId];
+    this.selectedStockIds = this.selectedStockIds.slice();
+  }
+
+  changeLib(libValue) {
+    if (libValue === '1') {
+      this.libValue = 1;
+    }else if (libValue === '2') {
+      this.libValue = 2;
+    }
   }
 }

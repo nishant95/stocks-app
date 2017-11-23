@@ -1,5 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {StockData} from '../../shared/model/stock-data.model';
+import {StockStorage} from '../../shared/storage/stock-storage';
 
 declare let d3: any;
 
@@ -13,8 +14,37 @@ export class LineChartComponent implements OnInit {
     this.setupStockPriceChanges(value);
   }
 
+  private _selectedStocks: string[] = [];
+  @Input('selectedStocks')set selectedStocks(stockIds: string[]){
+      if (stockIds.length > 0) {
+        if (this.selectedStocks[0] !== stockIds[0]) {
+          const newData = {
+            key: stockIds[0],
+            values: []
+          };
+          StockStorage.store.find(item => item.stockId === stockIds[0]).prices.forEach(
+            (priceEntry) => {
+              newData.values.push({
+                x: priceEntry.date,
+                y: priceEntry.price
+              });
+            }
+          );
+          this.data = [newData];
+          if (this.nvd3Chart && this.nvd3Chart.chart) { this.nvd3Chart.chart.update(); }
+        }
+      }else {
+          this.data = [];
+          if (this.nvd3Chart && this.nvd3Chart.chart) { this.nvd3Chart.chart.update(); }
+      }
+      this._selectedStocks = stockIds;
+  }
+
+  get selectedStocks(): string[] {
+      return this._selectedStocks;
+  }
+
   @ViewChild('nvd3Chart')nvd3Chart;
-  stocks: StockHistoricData[] = [];
   options;
   data = [];
 
@@ -22,9 +52,17 @@ export class LineChartComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initChart();
+  }
+
+  private initChart() {
     const dateFormat = d3.time.format.multi([
-        ['%H:%M:%S', function(d) { return d.getHours(); } ], // %L for millis
-        ['%a %d', function(d) { return true; }]
+      ['%H:%M:%S', function (d) {
+        return d.getHours();
+      }], // %L for millis
+      ['%a %d', function (d) {
+        return true;
+      }]
     ]);
     this.options = {
       chart: {
@@ -59,18 +97,18 @@ export class LineChartComponent implements OnInit {
         },
         xScale: d3.time.scale(),
         xAxis: {
-        //   axisLabel: 'Time',
+          //   axisLabel: 'Time',
           tickFormat: function (d) {
             return dateFormat(new Date(d));
           },
           rotateLabels: -45,
         },
         x2Axis: {
-            axisLabel: 'Time',
-            tickFormat: function (d) {
-              return dateFormat(new Date(d));
-            },
-            rotateLabels: -45,
+          axisLabel: 'Time',
+          tickFormat: function (d) {
+            return dateFormat(new Date(d));
+          },
+          rotateLabels: -45,
         },
         forceY: [0, 400],
         yAxis: {
@@ -78,7 +116,7 @@ export class LineChartComponent implements OnInit {
           tickFormat: function (d) {
             return d3.format('.02f')(d);
           },
-          axisLabelDistance: -10
+          axisLabelDistance: -5
         },
         callback: function (chart) {
           console.log('!!! lineChart callback !!!');
@@ -86,27 +124,6 @@ export class LineChartComponent implements OnInit {
       }
     };
   }
-
-  // setupStockPriceChanges(changes: StockData[]) {
-  //   console.log(changes);
-  //   changes.forEach((priceChange: StockData) => {
-  //     const changedStock = this.stocks.find((stock) => stock.stockId === priceChange.stockId);
-  //     if (changedStock) {
-  //       changedStock.prices.push({
-  //         price: priceChange.price,
-  //         updateTime: priceChange.updateTime
-  //       });
-  //     } else {
-  //       this.stocks.push({
-  //         stockId: priceChange.stockId,
-  //         prices: [{
-  //           price: priceChange.price,
-  //           updateTime: priceChange.updateTime
-  //         }]
-  //       });
-  //     }
-  //   });
-  // }
 
   setupStockPriceChanges(changes: StockData[]) {
     changes.forEach((priceChange: StockData) => {
@@ -126,37 +143,8 @@ export class LineChartComponent implements OnInit {
         });
       }
     });
-    if (changes.length > 0 && this.nvd3Chart.chart) {
+    if (changes.length > 0 && this.nvd3Chart && this.nvd3Chart.chart) {
       this.nvd3Chart.chart.update();
     }
   }
-
-
-  // stockDataForChart() {
-  //   const data = [];
-  //   this.stocks.forEach(
-  //     (stock: StockHistoricData) => {
-  //       const chartValues = [];
-  //       stock.prices.forEach((priceChange) => {
-  //         chartValues.push({x: priceChange.updateTime, y: priceChange.price});
-  //       });
-  //
-  //       data.push({
-  //         values: chartValues,
-  //         key: stock.stockId,
-  //         color: '#7777ff'
-  //       });
-  //     }
-  //   );
-  //   this.data = data;
-  //   return data;
-  // }
-}
-
-//  color: '#ff7f0e'
-//  color: '#2ca02c'
-//  color: '#7777ff',
-class StockHistoricData {
-  stockId: string;
-  prices: { price: number, updateTime: Date}[];
 }

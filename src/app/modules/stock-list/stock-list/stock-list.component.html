@@ -1,13 +1,18 @@
 <div class="row">
   <div class="col-5">
-    <table class="table table-bordered table-hover table-striped">
+    <table class="table table-hover">
       <thead>
       <th>Ticker</th>
-      <th>Price</th>
+      <th class="decimal">Price</th>
+      <th class="decimal">Session Max</th>
+      <th class="decimal">Session Min</th>
       <th>Last Updated</th>
       </thead>
       <tbody>
-      <tr *ngFor="let stock of stocks" (click)="selectStock(stock.stockId)" class="stock-row">
+      <tr *ngFor="let stock of stocks"
+          (click)="selectStock(stock.stockId)"
+          class="stock-row"
+          [class.active]="selectedStockIds.length > 0 && stock.stockId===selectedStockIds[0]">
         <td class="stockid">
 
           {{stock.stockId | uppercase}}
@@ -18,6 +23,12 @@
 
           {{stock.price | number: '1.2-2'}}
         </td>
+        <td class="decimal">
+          {{stock.sessionMax | number: '1.2-2'}}
+        </td>
+        <td class="decimal">
+          {{stock.sessionMin | number: '1.2-2'}}
+        </td>
         <td class="date">
 
           {{stock.updateTime | date}}
@@ -27,9 +38,24 @@
     </table>
   </div>
   <div class="col-6">
-    <div class="offset-3">
-        <span><b>Selected Stock:</b> {{selectedStocks[0]}}</span>
+    <!--<div class="offset-3">-->
+      <!--<label>Select Lib:-->
+        <!--<select value="1" name="chartLib" (change)="changeLib($event.target.value)">-->
+          <!--<option value="1">nvd3</option>-->
+          <!--<option value="2">highcharts</option>-->
+        <!--</select>-->
+      <!--</label>-->
+    <!--</div>-->
+    <div *ngIf="selectedStockIds.length>0" class="chart-panel">
+        <!--<div class="offset-2">-->
+          <h2 style="text-align: center;">{{selectedStockIds[0] | uppercase}}</h2>
+        <!--</div>-->
+        <!--<div class="offset-1">-->
+          <!--<span><b>Current Price:</b> {{selectedStock.price | number: '1.2-2'}}</span>-->
+        <!--</div>-->
+        <div *ngIf="libValue==1" class="chart-div">
+            <app-line-chart [selectedStocks]="selectedStockIds" [stockPriceChanges]="priceChangesInSelectedStocks"></app-line-chart>
+        </div>
     </div>
-    <app-line-chart [stockPriceChanges]="priceChangesInSelectedStocks"></app-line-chart>
   </div>
 </div>

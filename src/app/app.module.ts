@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { StockListModule } from './modules/stock-list/stock-list.module';
@@ -14,6 +15,7 @@ import 'nvd3';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     NvD3Module,
     StockListModule
   ],
