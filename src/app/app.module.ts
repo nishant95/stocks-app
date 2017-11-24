@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { StockListModule } from './modules/stock-list/stock-list.module';
 
 import { NvD3Module } from 'ng2-nvd3';
-import { ChartModule } from 'angular2-highcharts';
 
 import 'd3';
 import 'nvd3';
